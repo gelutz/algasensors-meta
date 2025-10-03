@@ -1,0 +1,9 @@
+[submodule "monitor"]
+	path = monitor
+	url = git@github.com:gelutz/algasensors-monitor.git
+[submodule "manager"]
+	path = manager
+	url = git@github.com:gelutz/algasensors-manager.git
+[submodule "processor"]
+	path = processor
+	url = git@github.com:gelutz/algasensors-processor.git
