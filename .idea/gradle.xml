@@ -5,6 +5,7 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/manager" />
+        <option name="gradleHome" value="/usr/share/java/gradle" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/manager" />
@@ -13,6 +14,7 @@
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/monitor" />
+        <option name="gradleHome" value="/usr/share/java/gradle" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/monitor" />
@@ -20,12 +22,15 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/processor" />
+        <option name="gradleHome" value="/usr/share/java/gradle" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/processor" />
           </set>
         </option>
+        <option name="resolveExternalAnnotations" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -5,12 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/manager/src/main/main-manager.iml" filepath="$PROJECT_DIR$/manager/src/main/main-manager.iml" />
       <module fileurl="file://$PROJECT_DIR$/monitor/src/main/main-monitor.iml" filepath="$PROJECT_DIR$/monitor/src/main/main-monitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/processor/src/main/main-processor.iml" filepath="$PROJECT_DIR$/processor/src/main/main-processor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/manager.main.iml" filepath="$PROJECT_DIR$/.idea/modules/manager.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/monitor.main.iml" filepath="$PROJECT_DIR$/.idea/modules/monitor.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/processor.main.iml" filepath="$PROJECT_DIR$/.idea/modules/processor.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/manager/src/test/test-manager.iml" filepath="$PROJECT_DIR$/manager/src/test/test-manager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/monitor/src/test/test-monitor.iml" filepath="$PROJECT_DIR$/monitor/src/test/test-monitor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/processor/src/test/test-processor.iml" filepath="$PROJECT_DIR$/processor/src/test/test-processor.iml" />
     </modules>
   </component>
 </project>
