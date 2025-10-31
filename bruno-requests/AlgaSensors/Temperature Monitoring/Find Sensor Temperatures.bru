@@ -1,0 +1,19 @@
+meta {
+  name: Find Sensor Temperatures
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8082/api/sensors/:sensorId/temperatures
+  body: none
+  auth: inherit
+}
+
+params:path {
+  sensorId: 0K6ZYEYMTZ8QT
+}
+
+settings {
+  encodeUrl: true
+}

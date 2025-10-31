@@ -1,0 +1,19 @@
+meta {
+  name: Remove Sensor Alert Config
+  type: http
+  seq: 7
+}
+
+delete {
+  url: http://localhost:8082/api/sensors/:sensorId/alert
+  body: none
+  auth: inherit
+}
+
+params:path {
+  sensorId: 
+}
+
+settings {
+  encodeUrl: true
+}

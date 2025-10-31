@@ -1,0 +1,31 @@
+meta {
+  name: Update Sensor
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:8080/api/sensors/:sensorId
+  body: json
+  auth: inherit
+}
+
+params:path {
+  sensorId: 0NDRE022AN179
+}
+
+body:json {
+  {
+      "name": "Sensor Teste Lutz",
+      "ip": "127.0.0.1",
+      "location": "Green Street 656",
+      "protocol": "HTTP",
+      "model": "V34-HTTP",
+      "enabled": false
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

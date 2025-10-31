@@ -1,0 +1,22 @@
+meta {
+  name: Search Sensors
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:8080/api/sensors?page=0&size=20&sort=id,desc
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 0
+  size: 20
+  sort: id,desc
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

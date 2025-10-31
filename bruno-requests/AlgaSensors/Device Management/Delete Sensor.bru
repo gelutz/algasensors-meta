@@ -1,0 +1,19 @@
+meta {
+  name: Delete Sensor
+  type: http
+  seq: 5
+}
+
+delete {
+  url: http://localhost:8080/api/sensors/:sensorId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  sensorId: 0K703XT07Y0RX
+}
+
+settings {
+  encodeUrl: true
+}

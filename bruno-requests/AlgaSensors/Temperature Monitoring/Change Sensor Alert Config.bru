@@ -1,0 +1,26 @@
+meta {
+  name: Change Sensor Alert Config
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://localhost:8082/api/sensors/:sensorId/alert
+  body: json
+  auth: inherit
+}
+
+params:path {
+  sensorId: 
+}
+
+body:json {
+  {
+      "maxTemperature": 100,
+      "minTemperature": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+}

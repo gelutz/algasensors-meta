@@ -1,0 +1,23 @@
+meta {
+  name: Receive Sensor data
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8081/api/sensors/:sensorId/temperatures/data
+  body: text
+  auth: inherit
+}
+
+params:path {
+  sensorId: 0K6ZYEYMTZ8QT
+}
+
+body:text {
+  24.95
+}
+
+settings {
+  encodeUrl: true
+}
