@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: http://localhost:8082/api/sensors/:sensorId/monitoring
+  url: {{url}}{{monitorPort}}/api/sensors/:sensorId/monitoring
   body: none
   auth: inherit
 }
@@ -16,4 +16,5 @@ params:path {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

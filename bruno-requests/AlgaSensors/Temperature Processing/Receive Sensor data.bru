@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: http://localhost:8081/api/sensors/:sensorId/temperatures/data
+  url: {{url}}{{managerPort}}/api/sensors/:sensorId/temperatures/
   body: text
   auth: inherit
 }
@@ -20,4 +20,5 @@ body:text {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
