@@ -5,13 +5,13 @@ meta {
 }
 
 put {
-  url: http://localhost:8082/api/sensors/:sensorId/alert
+  url: {{url}}{{monitorPort}}//api/sensors/:sensorId/alert
   body: json
   auth: inherit
 }
 
 params:path {
-  sensorId: 
+  sensorId: 0K6ZYEYMTZ8QT
 }
 
 body:json {
@@ -23,4 +23,5 @@ body:json {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

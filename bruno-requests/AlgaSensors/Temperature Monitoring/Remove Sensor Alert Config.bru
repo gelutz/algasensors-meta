@@ -5,15 +5,16 @@ meta {
 }
 
 delete {
-  url: http://localhost:8082/api/sensors/:sensorId/alert
+  url: {{url}}{{monitorPort}}/api/sensors/:sensorId/alert
   body: none
   auth: inherit
 }
 
 params:path {
-  sensorId: 
+  sensorId: 0K79PF0XACMPX
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

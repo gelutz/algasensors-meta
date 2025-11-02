@@ -5,15 +5,16 @@ meta {
 }
 
 put {
-  url: http://localhost:8082/api/sensors/:sensorId/monitoring/enable
+  url: {{url}}{{monitorPort}}/api/sensors/:sensorId/monitoring/enable
   body: none
   auth: inherit
 }
 
 params:path {
-  sensorId: 0K6ZYEYMTZ8QT
+  sensorId: 0NDSGCD30RD6T
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

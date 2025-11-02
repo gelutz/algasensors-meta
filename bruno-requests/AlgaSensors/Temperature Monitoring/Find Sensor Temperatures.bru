@@ -5,15 +5,16 @@ meta {
 }
 
 get {
-  url: http://localhost:8082/api/sensors/:sensorId/temperatures
+  url: {{url}}{{monitorPort}}/api/sensors/:sensorId/temperatures
   body: none
   auth: inherit
 }
 
 params:path {
-  sensorId: 0K6ZYEYMTZ8QT
+  sensorId: 0NDSGCD30RD6T
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
