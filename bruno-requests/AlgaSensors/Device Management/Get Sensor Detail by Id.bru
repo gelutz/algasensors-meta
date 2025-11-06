@@ -1,0 +1,20 @@
+meta {
+  name: Get Sensor Detail by Id
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:8080/api/sensors/:sensorId/detail
+  body: none
+  auth: inherit
+}
+
+params:path {
+  sensorId: 
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
