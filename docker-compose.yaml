@@ -11,5 +11,84 @@ services:
     volumes:
       - algasensors-rabbitmq:/var/lib/rabbitmq/
       - ./.config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  algasensors-manager:
+    build:
+      context: ./manager
+      dockerfile: Dockerfile
+    restart: no
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: manager
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:h2:file:./data/manager-db;CASE_INSENSITIVE_IDENTIFIERS=TRUE;
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: 123
+      SPRING_RABBITMQ_HOST: algasensors-rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: rabbitmq
+      SPRING_RABBITMQ_PASSWORD: rabbitmq
+      APP_SERVICES_MONITORING_URL: http://algasensors-monitor:8081
+      APP_SERVICES_MONITORING_PORT: 8081
+    volumes:
+      - manager-data:/app/data
+      - ./manager/logs:/app/logs
+    depends_on:
+      algasensors-rabbitmq:
+        condition: service_healthy
+
+  algasensors-monitor:
+    build:
+      context: ./monitor
+      dockerfile: Dockerfile
+    restart: no
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_APPLICATION_NAME: monitor
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:h2:file:./data/monitor-db;CASE_INSENSITIVE_IDENTIFIERS=TRUE;
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: 123
+      SPRING_RABBITMQ_HOST: algasensors-rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: rabbitmq
+      SPRING_RABBITMQ_PASSWORD: rabbitmq
+    volumes:
+      - monitor-data:/app/data
+      - ./monitor/logs:/app/logs
+    depends_on:
+      algasensors-rabbitmq:
+        condition: service_healthy
+
+  algasensors-processor:
+    build:
+      context: ./processor
+      dockerfile: Dockerfile
+    restart: no
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_APPLICATION_NAME: processor
+      SERVER_PORT: 8082
+      SPRING_RABBITMQ_HOST: algasensors-rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: rabbitmq
+      SPRING_RABBITMQ_PASSWORD: rabbitmq
+    volumes:
+      - ./processor/logs:/app/logs
+    depends_on:
+      algasensors-rabbitmq:
+        condition: service_healthy
+
 volumes:
   algasensors-rabbitmq:
+  manager-data:
+  monitor-data:
