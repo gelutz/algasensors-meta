@@ -17,6 +17,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+    networks:
+      - algasensors-network
 
   algasensors-manager:
     build:
@@ -41,8 +43,12 @@ services:
       - manager-data:/app/data
       - ./manager/logs:/app/logs
     depends_on:
+      algasensors-monitor:
+        condition: service_started
       algasensors-rabbitmq:
         condition: service_healthy
+    networks:
+      - algasensors-network
 
   algasensors-monitor:
     build:
@@ -67,6 +73,8 @@ services:
     depends_on:
       algasensors-rabbitmq:
         condition: service_healthy
+    networks:
+      - algasensors-network
 
   algasensors-processor:
     build:
@@ -85,10 +93,29 @@ services:
     volumes:
       - ./processor/logs:/app/logs
     depends_on:
+      algasensors-monitor:
+        condition: service_started
       algasensors-rabbitmq:
         condition: service_healthy
+    networks:
+      - algasensors-network
+
+  algasensors-client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: no
+    ports:
+      - "80:80"
+    environment:
+      MANAGER_URL: http://algasensors-manager:8080
+    networks:
+      - algasensors-network
 
 volumes:
   algasensors-rabbitmq:
   manager-data:
   monitor-data:
+
+networks:
+  algasensors-network:
