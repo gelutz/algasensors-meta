@@ -7,3 +7,6 @@
 [submodule "processor"]
 	path = processor
 	url = git@github.com:gelutz/algasensors-processor.git
+[submodule "client"]
+	path = client
+	url = git@github.com:gelutz/algasensors-client.git
