@@ -1,10 +1,14 @@
+<center>
+
 # AlgaSensors
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=java&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-6DB33F?logo=springboot&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-21.0.0-DD0031?logo=angular&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Latest-2496ED?logo=docker&logoColor=white)
-![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3-FF6600?logo=rabbitmq&logoColor=white)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.0.0-FF6600?logo=rabbitmq&logoColor=white)
+
+</center>
 
 A distributed temperature monitoring system with multiple microservices for device management, data processing, and real-time monitoring.
 
@@ -42,7 +46,7 @@ For development, it's recommended to run each service separately:
 
 2. Load environment variables for each service:
    ```bash
-   set -a; source ./service/.env.dev; set +a
+   set -a; source .env.dev; set +a
    ```
    (Works in bash/zsh)
 

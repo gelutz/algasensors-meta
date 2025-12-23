@@ -67,6 +67,7 @@ services:
     volumes:
       - manager-data:/app/data
       - ./manager/logs:/app/logs
+      - ./manager/src/main/resources/database:/app/src/main/resources/database
     depends_on:
       algasensors-monitor:
         condition: service_started
