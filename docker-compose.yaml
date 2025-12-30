@@ -81,8 +81,24 @@ services:
     restart: no
     ports:
       - "80:80"
-    environment:
-      MANAGER_URL: http://algasensors-manager:8080
+    networks:
+      - algasensors-network
+
+  algasensors-seeder:
+    build:
+      context: ./seeder
+    env_file:
+      - ./seeder/.env
+    restart: no
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./seeder/logs:/app/logs
+    depends_on:
+      algasensors-manager:
+        condition: service_started
+      algasensors-processor:
+        condition: service_started
     networks:
       - algasensors-network
 
