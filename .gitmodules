@@ -10,3 +10,6 @@
 [submodule "client"]
 	path = client
 	url = git@github.com:gelutz/algasensors-client.git
+[submodule "seeder"]
+	path = seeder
+	url = git@github.com:gelutz/algasensors-seeder.git
