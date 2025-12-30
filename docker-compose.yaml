@@ -29,7 +29,7 @@ services:
     ports:
       - "8082:8082"
     volumes:
-      - ./processor/logs:/app/logs
+      - ./processor/logs:/app/src/main/resources/logs
     depends_on:
       algasensors-rabbitmq:
         condition: service_healthy
@@ -47,7 +47,7 @@ services:
       - "8081:8081"
     volumes:
       - monitor-data:/app/data
-      - ./monitor/logs:/app/logs
+      - ./monitor/logs:/app/src/main/resources/logs
     depends_on:
       algasensors-processor:
         condition: service_started
@@ -66,7 +66,7 @@ services:
       - "8080:8080"
     volumes:
       - manager-data:/app/data
-      - ./manager/logs:/app/logs
+      - ./manager/logs:/app/src/main/resources/logs
       - ./manager/src/main/resources/database:/app/src/main/resources/database
     depends_on:
       algasensors-monitor:
@@ -74,15 +74,7 @@ services:
       algasensors-rabbitmq:
         condition: service_healthy
     networks:
-      - algasensors-network
-  algasensors-client:
-    build:
-      context: ./client
-    restart: no
-    ports:
-      - "80:80"
-    networks:
-      - algasensors-network
+      - algasensors-network  
 
   algasensors-seeder:
     build:
@@ -93,12 +85,21 @@ services:
     ports:
       - "8083:8083"
     volumes:
-      - ./seeder/logs:/app/logs
+      - ./seeder/logs:/app/src/main/resources/logs
     depends_on:
       algasensors-manager:
         condition: service_started
       algasensors-processor:
         condition: service_started
+    networks:
+      - algasensors-network
+
+  algasensors-client:
+    build:
+      context: ./client
+    restart: no
+    ports:
+      - "80:80"
     networks:
       - algasensors-network
 
