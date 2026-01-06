@@ -1,0 +1,13 @@
+---
+globs: client/*
+alwaysApply: false
+---
+
+## Libraries
+
+### Client Application (`client/`)
+
+- Always prefer to use components from the https://primeng.org/ library to build the UI.
+- Always prefer to use tailwind CSS classes in a clean way.
+- Do not make to the main object changes in files located inside folders named `models` or `model`.
+- Follow a concise color theory based on the Catppuccin Mocha palette (https://catppuccin.com/palette/) that is already defined in the `client/src/utils/css/catppuccin-theme.ts` file.

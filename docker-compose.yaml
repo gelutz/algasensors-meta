@@ -1,5 +1,5 @@
 services:
-  algasensors-rabbitmq:
+  rabbitmq:
     image: rabbitmq:3-management
     restart: no
     ports:
@@ -9,7 +9,7 @@ services:
       RABBITMQ_DEFAULT_USER: rabbitmq
       RABBITMQ_DEFAULT_PASS: rabbitmq
     volumes:
-      - algasensors-rabbitmq:/var/lib/rabbitmq/
+      - rabbitmq-data:/var/lib/rabbitmq/
       - ./.config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
     healthcheck:
       test: rabbitmq-diagnostics -q ping
@@ -20,7 +20,7 @@ services:
     networks:
       - algasensors-network
 
-  algasensors-processor:
+  processor:
     build:
       context: ./processor
     env_file:
@@ -31,13 +31,13 @@ services:
     volumes:
       - ./processor/logs:/app/src/main/resources/logs
     depends_on:
-      algasensors-rabbitmq:
+      rabbitmq:
         condition: service_healthy
     networks:
       - algasensors-network
 
 
-  algasensors-monitor:
+  monitor:
     build:
       context: ./monitor
     env_file:
@@ -49,14 +49,14 @@ services:
       - monitor-data:/app/data
       - ./monitor/logs:/app/src/main/resources/logs
     depends_on:
-      algasensors-processor:
+      processor:
         condition: service_started
-      algasensors-rabbitmq:
+      rabbitmq:
         condition: service_healthy
     networks:
       - algasensors-network
 
-  algasensors-manager:
+  manager:
     build:
       context: ./manager
     env_file:
@@ -69,42 +69,45 @@ services:
       - ./manager/logs:/app/src/main/resources/logs
       - ./manager/src/main/resources/database:/app/src/main/resources/database
     depends_on:
-      algasensors-monitor:
+      monitor:
         condition: service_started
-      algasensors-rabbitmq:
+      rabbitmq:
         condition: service_healthy
     networks:
-      - algasensors-network  
+      - algasensors-network
 
-  algasensors-seeder:
+  generator:
     build:
-      context: ./seeder
+      context: ./generator
     env_file:
-      - ./seeder/.env
+      - ./generator/.env
     restart: no
     ports:
       - "8083:8083"
     volumes:
-      - ./seeder/logs:/app/src/main/resources/logs
+      - ./generator/logs:/app/src/main/resources/logs
     depends_on:
-      algasensors-manager:
+      manager:
         condition: service_started
-      algasensors-processor:
+      processor:
         condition: service_started
     networks:
       - algasensors-network
 
-  algasensors-client:
-    build:
-      context: ./client
-    restart: no
-    ports:
-      - "80:80"
-    networks:
-      - algasensors-network
+  # client:
+  #   build:
+  #     context: ./client
+  #   restart: no
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     manager:
+  #       condition: service_started
+  #   networks:
+  #     - algasensors-network
 
 volumes:
-  algasensors-rabbitmq:
+  rabbitmq-data:
   manager-data:
   monitor-data:
 

@@ -1,0 +1,360 @@
+---
+globs: manager/*, processor/*, seeder/*, manager/*, monitor/*
+alwaysApply: false
+---
+
+# Spring Boot Core
+
+Spring Boot Core guidelines focus on proper usage of main annotations, bean management, and configuration best practices to build maintainable and efficient Spring Boot applications.
+
+## Implementing These Principles
+
+These guidelines are built upon the following core principles:
+
+- Principle 1: Use appropriate Spring annotations to clearly express component responsibilities
+- Principle 2: Leverage Spring's dependency injection and IoC container effectively
+- Principle 3: Follow configuration best practices for maintainable and testable applications
+- Principle 4: Apply proper bean lifecycle management and scoping
+
+## Table of contents
+
+- Rule 0: Spring Boot Main Application Class
+- Rule 1: Main Spring Boot Annotations Usage
+- Rule 2: Bean Definition and Management
+- Rule 3: Configuration Classes and Properties
+- Rule 4: Component Scanning and Package Organization
+- Rule 5: Conditional Configuration and Profiles
+- Rule 6: Constructor Dependency Injection Best Practices
+- Rule 7: Bean Minimization and Composition
+- Rule 8: Scheduled Tasks and Background Processing
+
+## Rule 0: Spring Boot Main Application Class
+
+Title: Create a Proper Spring Boot Main Application Class
+Description: Every Spring Boot application should have a main application class annotated with @SpringBootApplication. This class serves as the entry point and configuration root, combining @Configuration, @EnableAutoConfiguration, and @ComponentScan annotations.
+
+**Good example:**
+
+```java
+@SpringBootApplication
+public class MainApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MainApplication.class, args);
+    }
+}
+
+// For more complex scenarios with custom configuration
+@SpringBootApplication(
+    scanBasePackages = {
+        "com.company.app.controller",
+        "com.company.app.service",
+        "com.company.app.repository",
+        "com.company.app.config"
+    },
+    exclude = {
+        DataSourceAutoConfiguration.class,
+        SecurityAutoConfiguration.class
+    }
+)
+```
+
+**Bad Example:**
+
+```java
+// Missing @SpringBootApplication annotation
+public class MainApplication {
+    public static void main(String[] args) {
+        // Manual Spring context setup instead of SpringApplication.run()
+        ApplicationContext context = new AnnotationConfigApplicationContext();
+        // Manual configuration - loses Spring Boot benefits
+    }
+}
+
+// Using individual annotations instead of @SpringBootApplication
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan
+public class MainApplication { // Verbose and error-prone
+    public static void main(String[] args) {
+        SpringApplication.run(MainApplication.class, args);
+    }
+}
+
+// Poor naming and structure
+@SpringBootApplication
+public class App { // Non-descriptive name
+
+    @Autowired
+    private UserService userService; // Business logic in main class
+
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+
+        // Business logic in main method - should be in separate components
+        System.out.println("Processing users...");
+    }
+}
+```
+
+## Rule 1: Main Spring Boot Annotations Usage
+
+Title: Use Appropriate Spring Boot Annotations for Component Definition
+Description: Use the correct Spring Boot annotations to define components, controllers, services, and repositories. Each annotation has specific semantics and should be used according to the layer's responsibility.
+
+**Good example:**
+
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id));
+    }
+}
+
+@Service
+@Transactional
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
+    }
+}
+
+@Repository
+public interface UserRepository extends CrudRepository<User, Long> {
+
+    @Query("SELECT * FROM users WHERE email = :email")
+    Optional<User> findByEmail(@Param("email") String email);
+
+    @Modifying
+    @Query("UPDATE users SET last_login = :lastLogin WHERE id = :id")
+    void updateLastLogin(@Param("id") Long id, @Param("lastLogin") LocalDateTime lastLogin);
+}
+
+@Table("users")
+public class User {
+
+    @Id
+    private Long id;
+
+    @Column("email")
+    private String email;
+
+    @Column("first_name")
+    private String firstName;
+
+    @Column("last_name")
+    private String lastName;
+
+    @Column("last_login")
+    private LocalDateTime lastLogin;
+
+    // Constructors, getters, and setters
+}
+```
+
+**Bad Example:**
+
+```java
+@Component // Should be @RestController
+public class UserController {
+
+    @Inject // Use @Autowired for Spring Boot
+    private UserService userService;
+}
+
+@Component // Should be @Service
+public class UserService {
+    // Missing @Transactional for data operations
+}
+
+@Component // Should be @Repository
+public class UserRepository {
+    // Manual JDBC instead of using Spring Data JDBC
+}
+```
+
+## Rule 2: Bean Definition and Management
+
+Title: Proper Bean Definition, Scoping, and Lifecycle Management
+Description: Define beans with appropriate scope, use constructor injection, and manage bean lifecycle properly. Prefer constructor injection over field injection for better testability and immutability.
+
+**Good example:**
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    @Scope("singleton") // Default, but explicit for clarity
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    @Scope("prototype")
+    public AuditLogger auditLogger() {
+        return new AuditLogger();
+    }
+}
+
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    // Constructor injection - preferred approach
+    public UserService(UserRepository userRepository,
+                      PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+}
+
+@Component
+public class DatabaseMigration {
+
+    @EventListener
+    public void onApplicationReady(ApplicationReadyEvent event) {
+        // Perform initialization after Spring context is ready
+        performMigration();
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        // Cleanup resources before bean destruction
+    }
+}
+```
+
+**Bad Example:**
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); // Creates new instance every time
+    }
+}
+
+@Service
+public class UserService {
+
+    @Autowired // Field injection - harder to test
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // No constructor, relies on reflection
+}
+
+@Component
+public class DatabaseMigration {
+
+    @PostConstruct
+    public void init() {
+        // Heavy operations in PostConstruct can block application startup
+        performHeavyMigration();
+    }
+}
+```
+
+## Rule 3: Configuration Classes and Properties
+
+Title: Organize Configuration Using @Configuration Classes and External Properties
+Description: Use @Configuration classes to organize beans logically, leverage @ConfigurationProperties for type-safe configuration, and externalize configuration values properly.
+
+**Good example:**
+
+```java
+@Configuration
+@EnableConfigurationProperties({DatabaseProperties.class, SecurityProperties.class})
+public class AppConfig {
+
+    @Bean
+    @ConditionalOnProperty(name = "app.cache.enabled", havingValue = "true")
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager("users", "products");
+    }
+}
+
+@ConfigurationProperties(prefix = "app.database")
+@ConstructorBinding
+public class DatabaseProperties {
+
+    private final String url;
+    private final String username;
+    private final int maxConnections;
+    private final Duration connectionTimeout;
+
+    public DatabaseProperties(String url, String username,
+                            int maxConnections, Duration connectionTimeout) {
+        this.url = url;
+        this.username = username;
+        this.maxConnections = maxConnections;
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    // Getters only - immutable
+}
+
+@Configuration
+@Profile("!test")
+public class ProductionConfig {
+
+    @Bean
+    public DataSource dataSource(DatabaseProperties properties) {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(properties.getUrl());
+        config.setUsername(properties.getUsername());
+        config.setMaximumPoolSize(properties.getMaxConnections());
+        return new HikariDataSource(config);
+    }
+}
+```
+
+**Bad Example:**
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Value("${database.url}") // Scattered @Value annotations
+    private String databaseUrl;
+
+    @Value("${database.username}")
+    private String username;
+
+    @Bean
+    public DataSource dataSource() {
+        // Hardcoded values mixed with properties
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(databaseUrl);
+        config.setUsername(username);
+        config.setPassword("hardcoded-password"); // Security risk
+        config.setMaximumPoolSize(10); // Magic number
+        return new HikariDataSource(config);
+    }
+}
+
+// No type safety, no validation
+public class DatabaseConfig {
+    @Value("${app.database.max-connections:#{null}}")
+    private Integer maxConnections; // Can be null, no validation
+}
+```

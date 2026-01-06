@@ -19,6 +19,7 @@ AlgaSensors consists of the following services:
 - **Manager** ([manager/README.md](./manager/README.md)) - Device and sensor management API
 - **Monitor** ([monitor/README.md](./monitor/README.md)) - Temperature monitoring and alerting service
 - **Processor** ([processor/README.md](./processor/README.md)) - Data processing worker
+- **Generator** ([generator/README.md](./generator/README.md)) - Mock temperature data generator
 - **Client** ([client/README.md](./client/README.md)) - Angular web dashboard
 
 Services communicate via RabbitMQ message queue.
@@ -33,21 +34,24 @@ Deploy all services using Docker Compose:
 docker-compose up -d
 ```
 
-This starts all services (RabbitMQ, Processor, Monitor, Manager, Client) with proper dependencies and networking.
+This starts all services (RabbitMQ, Processor, Monitor, Manager, Generator, Client) with proper dependencies and networking.
 
 ### Development
 
 For development, it's recommended to run each service separately:
 
 1. Start RabbitMQ (via docker-compose):
+
    ```bash
-   docker-compose up algasensors-rabbitmq -d
+   docker-compose up rabbitmq -d
    ```
 
 2. Load environment variables for each service:
+
    ```bash
    set -a; source .env.dev; set +a
    ```
+
    (Works in bash/zsh)
 
 3. Run each service individually using its respective local start command (see service-specific READMEs).
