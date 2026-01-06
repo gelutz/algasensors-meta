@@ -13,3 +13,6 @@
 [submodule "seeder"]
 	path = seeder
 	url = git@github.com:gelutz/algasensors-seeder.git
+[submodule "generator"]
+	path = generator
+	url = git@github.com:gelutz/algasensors-generator.git
