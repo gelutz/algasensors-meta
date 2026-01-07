@@ -24,6 +24,36 @@ AlgaSensors consists of the following services:
 
 Services communicate via RabbitMQ message queue.
 
+## Features
+
+### Dashboard
+- **Sensor Overview Cards**: Each sensor card displays the mean temperature of the last 10 days in an interactive bar chart visualization, providing quick insights into temperature trends.
+- **Statistics Dashboard**: Real-time overview showing total sensors, online sensors, average temperature, and the most recent alert.
+
+### Sensor Detail Page
+- **Interactive Temperature History Graph**: Visualize temperature data over time with an interactive line chart. Select from multiple time periods:
+  - 24 hours (aggregated by 5-minute intervals)
+  - 7 days (aggregated by 1-hour intervals)
+  - 30 days (aggregated by 6-hour intervals)
+- **Recent Activity Card**: View the latest temperature readings and alert events in a detailed table format, showing timestamps, event types, values, and status indicators.
+- **Alert Configuration**: Configure minimum and maximum temperature thresholds for each sensor. The system automatically triggers alerts when temperatures exceed these limits.
+
+## Observability
+
+All backend services are configured with comprehensive logging to log files:
+
+- **Manager**: `./manager/logs/manager.log`
+- **Monitor**: `./monitor/logs/monitor.log`
+- **Processor**: `./processor/logs/processor.log`
+- **Generator**: `./generator/logs/generator.log`
+
+Log files are configured with:
+- Rolling policy: Maximum file size of 10MB
+- Retention: Keeps up to 10 historical log files
+- Structured format: Includes timestamp, thread, log level, and logger information
+
+When running with Docker Compose, log files are mounted as volumes and accessible in the respective service directories.
+
 ## Deployment
 
 ### Production/QA/Staging
